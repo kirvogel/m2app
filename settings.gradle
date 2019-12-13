@@ -1,2 +1,2 @@
-include ':app'
+include ':map_2_app'
 rootProject.name='m2app'
