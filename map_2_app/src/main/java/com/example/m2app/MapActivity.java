@@ -1,6 +1,7 @@
 package com.example.m2app;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,10 @@ public class MapActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void onClickClose(View view) {
+        finish();
     }
 
 }
