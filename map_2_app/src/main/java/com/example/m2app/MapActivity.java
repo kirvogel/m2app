@@ -1,6 +1,8 @@
 package com.example.m2app;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -47,6 +51,18 @@ public class MapActivity extends AppCompatActivity implements
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        final MapActivity that = this;
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
+                if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
+
+                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                }
+            }
+        });
     }
 
     // Add the mapView lifecycle to the activity's lifecycle methods

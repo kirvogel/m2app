@@ -14,5 +14,14 @@
         mapbox:mapbox_cameraTargetLat="40.73581"
         mapbox:mapbox_cameraTargetLng="-73.99155"
         mapbox:mapbox_cameraZoom="11" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="top|center"
+        android:layout_margin="@dimen/fab_margin"
+        mapbox:srcCompat="@android:drawable/ic_menu_revert" />
 
 </FrameLayout>
