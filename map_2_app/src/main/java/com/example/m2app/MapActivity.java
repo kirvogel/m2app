@@ -1,10 +1,5 @@
 package com.example.m2app;
-
 import android.os.Bundle;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -12,14 +7,26 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+
+/**
+ * The most basic example of adding a map to an activity.
+ */
 public class MapActivity extends AppCompatActivity {
+
     private MapView mapView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
+        // Mapbox access token is configured here. This needs to be called either in your application
+        // object or in the same activity which contains the mapview.
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
 
+        // This contains the MapView in XML and needs to be called after the access token is configured.
         setContentView(R.layout.activity_map);
 
         mapView = findViewById(R.id.mapView);
@@ -27,23 +34,23 @@ public class MapActivity extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
 
-                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-
+                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments.
 
                     }
                 });
-
             }
         });
     }
 
-    public void onClickClose(View view) {
-        finish();
+    // Add the mapView lifecycle to the activity's lifecycle methods
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
     }
 
     @Override
@@ -53,27 +60,15 @@ public class MapActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         mapView.onStop();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
     }
 
     @Override
@@ -88,4 +83,9 @@ public class MapActivity extends AppCompatActivity {
         mapView.onDestroy();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
 }
