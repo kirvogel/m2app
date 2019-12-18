@@ -18,9 +18,9 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_map);
 
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
