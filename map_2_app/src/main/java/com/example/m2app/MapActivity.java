@@ -47,6 +47,12 @@ public class MapActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
