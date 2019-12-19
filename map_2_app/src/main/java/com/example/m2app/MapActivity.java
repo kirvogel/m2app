@@ -65,15 +65,8 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
                 if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
-
                     mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
                             new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
-                    try {
-                        MobileCountryCodeMobileNetworkCode.getCoutryName(lastKnownLocation.getLatitude(),
-                                lastKnownLocation.getLongitude());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         });
