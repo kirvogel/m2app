@@ -1,6 +1,7 @@
 package com.example.m2app;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.example.data.MobileCountryCodeMobileNetworkCode;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -25,7 +27,11 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 
@@ -38,6 +44,10 @@ public class MapActivity extends AppCompatActivity implements
     private MapView mapView;
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
+
+    public MapboxMap getMap() {
+        return mapboxMap;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +167,8 @@ public class MapActivity extends AppCompatActivity implements
 
             final MapActivity that = this;
             new AsyncTask<Void, String, String>() {
+                WeakReference<Activity> mWeakActivity = new WeakReference<Activity>(that);
+                JSONObject[] towers;
                 @Override
                 protected String doInBackground(Void... voids) {
                     String s = "";
@@ -164,7 +176,7 @@ public class MapActivity extends AppCompatActivity implements
 
                         if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
                             try {
-                                MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
+                                towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
                                         lastKnownLocation.getLongitude());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -174,6 +186,18 @@ public class MapActivity extends AppCompatActivity implements
                         e.printStackTrace();
                     }
                     return s;
+                }
+
+                @Override
+                protected void onPostExecute(String result) {
+                    for (JSONObject obj: towers) {
+                        try {
+                            mapboxMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng((double)obj.get("lat"), (double)obj.get("lon"))));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }.execute();
         } else {
