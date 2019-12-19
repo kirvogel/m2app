@@ -101,7 +101,9 @@ public class MobileCountryCodeMobileNetworkCode {
         String country = getCoutryName(latitude, longtitude);
         Integer code = getMCC(country);
         int[] mncList = getMNCList(code);
-        int cellId = getCellId();
+        MyResult res = getCellId();
+        int cellId = res.getFirst();
+        int lac = res.getSecond();
 
         List<JSONObject> obj = new LinkedList<>();
 
@@ -119,7 +121,8 @@ public class MobileCountryCodeMobileNetworkCode {
                         "    \"mcc\": " + code + "," +
                         "    \"mnc\": " + mnc + "," +
                         "    \"cells\": [{" +
-                        "        \"cid\": " + cellId +
+                        "        \"cid\": " + cellId + "," +
+                        "\"lac\":" + lac +
                         "    }]," +
                         "    \"address\": 0" +
                         "}";
@@ -138,7 +141,7 @@ public class MobileCountryCodeMobileNetworkCode {
                 assert false;
                 System.out.println(response.toString());
                 JSONObject json = new JSONObject(response.toString());
-                if (json.get("status") == "ok") {
+                if (json.get("status").equals("ok")) {
                     obj.add(json);
                 }
             } catch (IOException | JSONException e) {
@@ -147,11 +150,16 @@ public class MobileCountryCodeMobileNetworkCode {
                 connection.disconnect();
             }
         }
-        return (JSONObject[]) obj.toArray();
+        JSONObject[] objects = new JSONObject[obj.size()];
+        for (int i = 0; i < obj.size(); ++i) {
+            objects[i] = obj.get(i);
+        }
+        return objects;
     }
 
-    private static int getCellId() {
+    private static MyResult getCellId() {
         int cellId = 0;
+        int lac = 0;
         final TelephonyManager telephony =
                 (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         assert telephony != null;
@@ -159,9 +167,11 @@ public class MobileCountryCodeMobileNetworkCode {
             @SuppressLint("MissingPermission") final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
             if (location != null) {
                 cellId = location.getCid();
+                lac = location.getLac();
             }
         }
-        return cellId;
+        MyResult res = new MyResult(cellId, lac);
+        return res;
     }
 }
 
