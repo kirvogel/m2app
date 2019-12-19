@@ -164,7 +164,7 @@ public class MapActivity extends AppCompatActivity implements
 
                         if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
                             try {
-                                MobileCountryCodeMobileNetworkCode.getCoutryName(lastKnownLocation.getLatitude(),
+                                MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
                                         lastKnownLocation.getLongitude());
                             } catch (IOException e) {
                                 e.printStackTrace();

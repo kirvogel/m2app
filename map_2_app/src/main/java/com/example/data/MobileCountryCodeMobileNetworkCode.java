@@ -1,6 +1,10 @@
 package com.example.data;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 
 import com.example.m2app.R;
 
@@ -10,10 +14,16 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 public class MobileCountryCodeMobileNetworkCode {
     @SuppressLint("UseSparseArrays")
@@ -25,7 +35,7 @@ public class MobileCountryCodeMobileNetworkCode {
     }
 
     static {
-        mapNames.put("RU", 250);
+        mapNames.put("ru", 250);
         map.put(250, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 19, 20,
         23, 28, 32, 35, 37, 38, 39, 44, 50, 92, 93, 99}); //россия
 
@@ -87,11 +97,71 @@ public class MobileCountryCodeMobileNetworkCode {
         return "";
     }
 
-    public static JSONObject[] getAllStations(double latitude, double longtitude) throws IOException {
+    public static JSONObject[] getStations(double latitude, double longtitude) throws IOException, JSONException {
         String country = getCoutryName(latitude, longtitude);
         Integer code = getMCC(country);
         int[] mncList = getMNCList(code);
-        return null;
+        int cellId = getCellId();
+
+        List<JSONObject> obj = new LinkedList<>();
+
+        for (int mnc :
+                mncList) {
+            URL url = new URL("https://us1.unwiredlabs.com/v2/process.php");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setReadTimeout(10000);
+            try {
+                String query = "{\n" +
+                        "    \"token\": \"a65aee3fdcc744\"," +
+                        "    \"radio\": \"gsm\"," +
+                        "    \"mcc\": " + code + "," +
+                        "    \"mnc\": " + mnc + "," +
+                        "    \"cells\": [{" +
+                        "        \"cid\": " + cellId +
+                        "    }]," +
+                        "    \"address\": 0" +
+                        "}";
+                Writer writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = bufferedReader.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                bufferedReader.close();
+                assert false;
+                System.out.println(response.toString());
+                JSONObject json = new JSONObject(response.toString());
+                if (json.get("status") == "ok") {
+                    obj.add(json);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            } finally {
+                connection.disconnect();
+            }
+        }
+        return (JSONObject[]) obj.toArray();
+    }
+
+    private static int getCellId() {
+        int cellId = 0;
+        final TelephonyManager telephony =
+                (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        assert telephony != null;
+        if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
+            @SuppressLint("MissingPermission") final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
+            if (location != null) {
+                cellId = location.getCid();
+            }
+        }
+        return cellId;
     }
 }
 
