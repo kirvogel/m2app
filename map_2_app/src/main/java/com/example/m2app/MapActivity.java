@@ -166,18 +166,17 @@ public class MapActivity extends AppCompatActivity implements
             final Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 
             final MapActivity that = this;
-            new AsyncTask<Void, String, String>() {
-                WeakReference<Activity> mWeakActivity = new WeakReference<Activity>(that);
+            new AsyncTask<Void, String, JSONObject[] >() {
                 JSONObject[] towers;
                 @Override
-                protected String doInBackground(Void... voids) {
-                    String s = "";
+                protected JSONObject[]  doInBackground(Void... voids) {
                     try {
 
                         if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
                             try {
                                 towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
                                         lastKnownLocation.getLongitude());
+                                return towers;
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -185,12 +184,12 @@ public class MapActivity extends AppCompatActivity implements
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return s;
+                    return new JSONObject[]{};
                 }
 
                 @Override
-                protected void onPostExecute(String result) {
-                    for (JSONObject obj: towers) {
+                protected void onPostExecute(JSONObject[]  result) {
+                    for (JSONObject obj: result) {
                         try {
                             mapboxMap.addMarker(new MarkerOptions()
                                     .position(new LatLng((double)obj.get("lat"), (double)obj.get("lon"))));
