@@ -29,8 +29,9 @@ import com.mapbox.mapboxsdk.maps.Style;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 /**
@@ -160,27 +161,28 @@ public class MapActivity extends AppCompatActivity implements
                 @Override
                 protected JSONObject[]  doInBackground(Void... voids) {
                     try {
-
-                        if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
-                            towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
-                                        lastKnownLocation.getLongitude());
+                        if (PermissionsManager.areLocationPermissionsGranted(that)
+                                && lastKnownLocation != null) {
+                            towers = MobileCountryCodeMobileNetworkCode.getStations(
+                                    lastKnownLocation.getLatitude(),
+                                    lastKnownLocation.getLongitude());
                             return towers;
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Timber.tag("M2APP").v(e);
                     }
                     return new JSONObject[]{};
                 }
 
                 @Override
                 protected void onPostExecute(JSONObject[]  result) {
-                    for (JSONObject obj: result) {
-                        try {
+                    try {
+                        for (JSONObject obj: result) {
                             mapboxMap.addMarker(new MarkerOptions()
                                     .position(new LatLng((double)obj.get("lat"), (double)obj.get("lon"))));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    }catch (JSONException e) {
+                        Timber.tag("M2APP").v(e);
                     }
                 }
             }.execute();

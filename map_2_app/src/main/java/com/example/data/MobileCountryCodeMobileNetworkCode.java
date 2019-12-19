@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
+
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 public class MobileCountryCodeMobileNetworkCode {
@@ -56,28 +58,23 @@ public class MobileCountryCodeMobileNetworkCode {
     }
 
     @SuppressLint("Assert")
-    public static String getCoutryName(double latitude, double longtitude) throws IOException {
+    private static String getCoutryName(double latitude, double longtitude) throws IOException {
         URL url = new URL("https://us1.unwiredlabs.com/v2/reverse.php?token="
                 + "a65aee3fdcc744"
                 + "&lat=" + latitude
                 + "&lon=" + longtitude);
-        System.out.println(url);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
             String inputLine;
             StringBuilder response = new StringBuilder();
 
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
             }
-            bufferedReader.close();
             assert false;
-            System.out.println(response.toString());
             JSONObject json = new JSONObject(response.toString());
-            String country_code = (String)((JSONObject)json.get("address")).get("country_code");
-            System.out.println(country_code);
-            return country_code;
+            String countryCode = (String)((JSONObject)json.get("address")).get("country_code");
+            return countryCode;
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         } finally {
@@ -104,7 +101,8 @@ public class MobileCountryCodeMobileNetworkCode {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setReadTimeout(10000);
-            try {
+            try (Writer writer = new OutputStreamWriter(connection.getOutputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String query = "{\n" +
                         "    \"token\": \"a65aee3fdcc744\"," +
                         "    \"radio\": \"gsm\"," +
@@ -116,26 +114,23 @@ public class MobileCountryCodeMobileNetworkCode {
                         "    }]," +
                         "    \"address\": 0" +
                         "}";
-                Writer writer = new OutputStreamWriter(connection.getOutputStream());
+
                 writer.write(query);
                 writer.flush();
-                writer.close();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
                 String inputLine;
                 StringBuilder response = new StringBuilder();
 
                 while ((inputLine = bufferedReader.readLine()) != null) {
                     response.append(inputLine);
                 }
-                bufferedReader.close();
                 assert false;
-                System.out.println(response.toString());
                 JSONObject json = new JSONObject(response.toString());
                 if (json.get("status").equals("ok")) {
                     obj.add(json);
                 }
             } catch (IOException | JSONException e) {
-                e.printStackTrace();
+                Timber.tag("M2APP").v(e);
             } finally {
                 connection.disconnect();
             }
