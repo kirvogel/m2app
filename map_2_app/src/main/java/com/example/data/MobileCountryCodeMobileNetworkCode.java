@@ -39,6 +39,15 @@ public class MobileCountryCodeMobileNetworkCode {
         }
     }
 
+    public static Integer getMCC(String name) {
+        if (name == null) return 0;
+        try {
+            return mapNames.get(name);
+        } catch (NullPointerException e) {
+            return 0;
+        }
+    }
+
     public static int[] getMNCList(String name) {
         try {
             return map.get(mapNames.get(name));
@@ -76,6 +85,13 @@ public class MobileCountryCodeMobileNetworkCode {
             urlConnection.disconnect();
         }
         return "";
+    }
+
+    public static JSONObject[] getAllStations(double latitude, double longtitude) throws IOException {
+        String country = getCoutryName(latitude, longtitude);
+        Integer code = getMCC(country);
+        int[] mncList = getMNCList(code);
+        return null;
     }
 }
 
