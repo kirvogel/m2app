@@ -1,7 +1,6 @@
 package com.example.m2app;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 
@@ -44,10 +42,6 @@ public class MapActivity extends AppCompatActivity implements
     private MapView mapView;
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
-
-    public MapboxMap getMap() {
-        return mapboxMap;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

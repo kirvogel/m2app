@@ -2,11 +2,8 @@ package com.example.data;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
-
-import com.example.m2app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +38,7 @@ public class MobileCountryCodeMobileNetworkCode {
 
     }
 
-    public static int[] getMNCList(int mcc) {
+    private static int[] getMNCList(int mcc) {
         try {
             return map.get(mcc);
         } catch (Exception e) {
@@ -49,20 +46,12 @@ public class MobileCountryCodeMobileNetworkCode {
         }
     }
 
-    public static Integer getMCC(String name) {
+    private static Integer getMCC(String name) {
         if (name == null) return 0;
         try {
             return mapNames.get(name);
         } catch (NullPointerException e) {
             return 0;
-        }
-    }
-
-    public static int[] getMNCList(String name) {
-        try {
-            return map.get(mapNames.get(name));
-        } catch (Exception e) {
-            return new int[]{};
         }
     }
 
@@ -97,7 +86,8 @@ public class MobileCountryCodeMobileNetworkCode {
         return "";
     }
 
-    public static JSONObject[] getStations(double latitude, double longtitude) throws IOException, JSONException {
+    @SuppressLint("Assert")
+    public static JSONObject[] getStations(double latitude, double longtitude) throws IOException {
         String country = getCoutryName(latitude, longtitude);
         Integer code = getMCC(country);
         int[] mncList = getMNCList(code);
@@ -170,20 +160,6 @@ public class MobileCountryCodeMobileNetworkCode {
                 lac = location.getLac();
             }
         }
-        MyResult res = new MyResult(cellId, lac);
-        return res;
+        return new MyResult(cellId, lac);
     }
 }
-
-/*
-{
-    "token": "a65aee3fdcc744",
-    "radio": "gsm",
-    "mcc": 250,
-    "mnc": 1,
-    "cells": [{
-        "cid": 2
-    }],
-    "address": 0
-}
- */
