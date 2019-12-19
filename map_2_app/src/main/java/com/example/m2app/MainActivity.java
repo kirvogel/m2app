@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickSwitchActivity(view);
+                onClickSwitchActivity();
             }
         });
     }
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onClickSwitchActivity(View view) {
+    public void onClickSwitchActivity() {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }

@@ -29,8 +29,9 @@ import com.mapbox.mapboxsdk.maps.Style;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 /**
@@ -127,29 +128,31 @@ public class MapActivity extends AppCompatActivity implements
                 });
     }
 
+    private void setLocationComponent(@NonNull Style loadedMapStyle) {
+        // Get an instance of the component
+        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+// Activate with options
+        locationComponent.activateLocationComponent(
+                LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
+
+// Enable to make component visible
+        locationComponent.setLocationComponentEnabled(true);
+
+// Set the component's camera mode
+        locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
+
+// Set the component's render mode
+        locationComponent.setRenderMode(RenderMode.GPS);
+    }
+
 
     @SuppressLint("StaticFieldLeak")
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
 // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
-// Get an instance of the component
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-// Activate with options
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
-
-// Enable to make component visible
-            locationComponent.setLocationComponentEnabled(true);
-
-// Set the component's camera mode
-            locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
-
-// Set the component's render mode
-            locationComponent.setRenderMode(RenderMode.GPS);
-
+            setLocationComponent(loadedMapStyle);
             final Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 
             final MapActivity that = this;
@@ -158,31 +161,28 @@ public class MapActivity extends AppCompatActivity implements
                 @Override
                 protected JSONObject[]  doInBackground(Void... voids) {
                     try {
-
-                        if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
-                            try {
-                                towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
-                                        lastKnownLocation.getLongitude());
-                                return towers;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        if (PermissionsManager.areLocationPermissionsGranted(that)
+                                && lastKnownLocation != null) {
+                            towers = MobileCountryCodeMobileNetworkCode.getStations(
+                                    lastKnownLocation.getLatitude(),
+                                    lastKnownLocation.getLongitude());
+                            return towers;
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Timber.tag("M2APP").v(e);
                     }
                     return new JSONObject[]{};
                 }
 
                 @Override
                 protected void onPostExecute(JSONObject[]  result) {
-                    for (JSONObject obj: result) {
-                        try {
+                    try {
+                        for (JSONObject obj: result) {
                             mapboxMap.addMarker(new MarkerOptions()
                                     .position(new LatLng((double)obj.get("lat"), (double)obj.get("lon"))));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    }catch (JSONException e) {
+                        Timber.tag("M2APP").v(e);
                     }
                 }
             }.execute();
