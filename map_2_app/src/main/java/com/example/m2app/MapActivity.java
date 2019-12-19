@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.data.MobileCountryCodeMobileNetworkCode;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -22,6 +23,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -60,6 +62,12 @@ public class MapActivity extends AppCompatActivity implements
 
                     mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
                             new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                    try {
+                        MobileCountryCodeMobileNetworkCode.getCoutryName(lastKnownLocation.getLatitude(),
+                                lastKnownLocation.getLongitude());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
