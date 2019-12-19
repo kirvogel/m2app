@@ -127,29 +127,31 @@ public class MapActivity extends AppCompatActivity implements
                 });
     }
 
+    private void setLocationComponent(@NonNull Style loadedMapStyle) {
+        // Get an instance of the component
+        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+// Activate with options
+        locationComponent.activateLocationComponent(
+                LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
+
+// Enable to make component visible
+        locationComponent.setLocationComponentEnabled(true);
+
+// Set the component's camera mode
+        locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
+
+// Set the component's render mode
+        locationComponent.setRenderMode(RenderMode.GPS);
+    }
+
 
     @SuppressLint("StaticFieldLeak")
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
 // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
-// Get an instance of the component
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-// Activate with options
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
-
-// Enable to make component visible
-            locationComponent.setLocationComponentEnabled(true);
-
-// Set the component's camera mode
-            locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
-
-// Set the component's render mode
-            locationComponent.setRenderMode(RenderMode.GPS);
-
+            setLocationComponent(loadedMapStyle);
             final Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 
             final MapActivity that = this;
