@@ -160,13 +160,9 @@ public class MapActivity extends AppCompatActivity implements
                     try {
 
                         if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
-                            try {
-                                towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
+                            towers = MobileCountryCodeMobileNetworkCode.getStations(lastKnownLocation.getLatitude(),
                                         lastKnownLocation.getLongitude());
-                                return towers;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            return towers;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
