@@ -50,9 +50,10 @@ public class MobileCountryCodeMobileNetworkCode {
     @SuppressLint("Assert")
     public static String getCoutryName(double latitude, double longtitude) throws IOException {
         URL url = new URL("https://us1.unwiredlabs.com/v2/reverse.php?token="
-                + R.string.open_cell_id_token
-                + " &lat=" + latitude
-                + " &lon=" + longtitude);
+                + "a65aee3fdcc744"
+                + "&lat=" + latitude
+                + "&lon=" + longtitude);
+        System.out.println(url);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -64,7 +65,8 @@ public class MobileCountryCodeMobileNetworkCode {
             }
             bufferedReader.close();
             assert false;
-            JSONObject json = new JSONObject(inputLine);
+            System.out.println(response.toString());
+            JSONObject json = new JSONObject(response.toString());
             String country_code = (String)((JSONObject)json.get("address")).get("country_code");
             System.out.println(country_code);
             return country_code;

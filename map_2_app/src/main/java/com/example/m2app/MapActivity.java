@@ -1,6 +1,8 @@
 package com.example.m2app;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -129,6 +131,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     @SuppressWarnings( {"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
 // Check if permissions are enabled and if not request
@@ -149,6 +152,30 @@ public class MapActivity extends AppCompatActivity implements
 
 // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.GPS);
+
+            final Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
+
+            final MapActivity that = this;
+            new AsyncTask<Void, String, String>() {
+                @Override
+                protected String doInBackground(Void... voids) {
+                    String s = "";
+                    try {
+
+                        if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
+                            try {
+                                MobileCountryCodeMobileNetworkCode.getCoutryName(lastKnownLocation.getLatitude(),
+                                        lastKnownLocation.getLongitude());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return s;
+                }
+            }.execute();
         } else {
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(this);
