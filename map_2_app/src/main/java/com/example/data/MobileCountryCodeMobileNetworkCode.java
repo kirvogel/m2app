@@ -73,10 +73,9 @@ public class MobileCountryCodeMobileNetworkCode {
             }
             assert false;
             JSONObject json = new JSONObject(response.toString());
-            String countryCode = (String)((JSONObject)json.get("address")).get("country_code");
-            return countryCode;
+            return (String)((JSONObject)json.get("address")).get("country_code");
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Timber.tag("M2APP").v(e);
         } finally {
             urlConnection.disconnect();
         }
