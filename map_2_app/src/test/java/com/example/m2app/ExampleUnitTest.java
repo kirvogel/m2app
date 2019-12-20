@@ -62,13 +62,6 @@ public class ExampleUnitTest {
         assertEquals(1, myres.getFirst());
         assertEquals(2, myres.getSecond());
     }
-    /*@Test
-    //@Config(sdk = Build.VERSION_CODES.O_MR1)
-    public void useAppContext() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.m2app", appContext.getPackageName());
-    }*/
     @Test
    // @Config(sdk = Build.VERSION_CODES.O_MR1)
     public void mobileProvidersCodeTestException() {

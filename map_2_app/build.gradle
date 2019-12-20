@@ -64,12 +64,12 @@ sonarqube {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.example.m2app"
         minSdkVersion 27
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -96,7 +96,7 @@ android {
 def coverageSourceDirs = [
        '../app/src/main/java'
 ]
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedAndroidTest', 'createDebugCoverageReport']) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"
@@ -117,9 +117,10 @@ def mainSrc = "${project.projectDir}/src/main/java"
 
  sourceDirectories = files([mainSrc])
  classDirectories = files([debugTree])
- executionData = fileTree(dir: "$buildDir", includes: [
-        "jacoco/testDebugUnitTest.exec"
- ])
+    executionData = fileTree(dir: "$buildDir", includes: [
+                        "jacoco/testDebugUnitTest.exec",
+                        "outputs/code-coverage/connected/*coverage.ec"
+    ])
 
   reports {
      xml.enabled = true
