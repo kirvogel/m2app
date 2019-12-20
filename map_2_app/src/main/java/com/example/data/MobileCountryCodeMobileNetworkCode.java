@@ -2,6 +2,8 @@ package com.example.data;
 
 import android.annotation.SuppressLint;
 
+import com.google.gson.stream.JsonWriter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,9 +22,9 @@ public class MobileCountryCodeMobileNetworkCode {
     @SuppressLint("Assert")
     public static String getCoutryName(double latitude, double longtitude) {
         try  {
-            JSONObject json = new JSONObject(Requests.getCountryCode(latitude, longtitude));
+            JSONObject json = JSONCreator.createJSONObject(Requests.getCountryCode(latitude, longtitude));
             return (String)((JSONObject)json.get("address")).get("country_code");
-        } catch (IOException | JSONException e) {
+        } catch (Exception e) {
             Timber.tag("M2APP").v(e);
         }
         return "";
@@ -41,7 +43,7 @@ public class MobileCountryCodeMobileNetworkCode {
                 stations) {
             try  {
 
-                JSONObject json = new JSONObject(mnc);
+                JSONObject json = JSONCreator.createJSONObject(mnc);
                 if (json.get("status").equals("ok")) {
                     obj.add(json);
                 }
@@ -49,7 +51,7 @@ public class MobileCountryCodeMobileNetworkCode {
                 Timber.tag("M2APP").v(e);
             }
         }
-        JSONObject[] objects = new JSONObject[obj.size()];
+        JSONObject[] objects = JSONCreator.createArray(obj.size());
         for (int i = 0; i < obj.size(); ++i) {
             objects[i] = obj.get(i);
         }

@@ -4,21 +4,23 @@ package com.example.m2app;
 
 //import org.junit.runner.RunWith;
 
-//@RunWith(AndroidJUnit4.class)
+//@RunWith(RobolectricTestRunner.class)
 public class InstrumentedTests {
-    /*@Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+/*
+    private MainActivity activity;
 
     @Before
-    public void setup() {
-        Intents.init();
+    public void setUp() throws Exception
+    {
+        activity = Robolectric.buildActivity( MainActivity.class )
+                .create()
+                .resume()
+                .get();
     }
 
-    /*@Test
-    public void shouldChangeTabAfterMenuClick() {
-        onView(withId(R.id.buttonMap)).perform(click());
-        pressBack();
-        onView(withId(R.id.buttonMap)).check(matches(isDisplayed()));
-        intended(hasComponent(MapActivity.class.getName()));
+    @Test
+    public void shouldNotBeNull() throws Exception
+    {
+        Assert.assertNotNull( activity );
     }*/
 }

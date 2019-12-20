@@ -1,6 +1,6 @@
 package com.example.data;
 
-public final class MyResult {
+public class MyResult {
     private final int first;
     private final int second;
 

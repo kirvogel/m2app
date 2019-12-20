@@ -4,13 +4,20 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.test.mock.MockContext;
 
+import com.example.data.JSONCreator;
+import com.example.data.MobileCountryCodeMobileNetworkCode;
 import com.example.data.MyResult;
 import com.example.data.Requests;
 import com.mapbox.mapboxsdk.Mapbox;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.runner.Request;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.Any;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -115,5 +122,33 @@ public class ExampleUnitTest {
         MyResult res = Requests.getCellId();
         assertEquals(0, res.getFirst());
         assertEquals(0, res.getSecond());
+    }
+
+    @Test
+    @PrepareForTest({Requests.class, JSONCreator.class})
+    public void MobileCountryCodeMobileNetworkCodeTest() throws IOException, JSONException {
+        MockitoAnnotations.initMocks(this);
+        PowerMockito.mockStatic(Requests.class);
+        PowerMockito.mockStatic(JSONCreator.class);
+
+        MyResult location = mock(MyResult.class);
+        when(location.getFirst()).thenReturn(0);
+        when(location.getSecond()).thenReturn(0);
+
+        JSONObject obj1 = mock(JSONObject.class);
+        JSONObject obj2 = mock(JSONObject.class);
+        JSONObject[] array = new JSONObject[]{obj1, obj2};
+
+        when(Requests.getCellId()).thenReturn(location);
+        when(Requests.getCountryCode(any(Double.class), any(Double.class))).thenReturn("ru");
+        when(Requests.getMCC("ru")).thenReturn(250);
+        when(Requests.getMNCList(any(Integer.class))).thenReturn(new int[]{1,2,3});
+        when(Requests.getStations(any(Integer.class), any(Integer.class), any(String.class))).thenReturn(new String[]{});
+
+        when(JSONCreator.createJSONObject(any(String.class))).thenReturn(obj1);
+        when(JSONCreator.createArray(any(Integer.class))).thenReturn(array);
+
+        assertEquals(2, MobileCountryCodeMobileNetworkCode.getStations(0, 0).length);
+        assertEquals("", MobileCountryCodeMobileNetworkCode.getCoutryName(0 , 0));
     }
 }
