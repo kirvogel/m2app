@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
-        FloatingActionButton fab2 = findViewById(R.id.button);
-        fab2.setOnClickListener(view -> onClickSwitchActivity());
+        FloatingActionButton fab2 = findViewById(R.id.buttonMap);
+        fab2.setOnClickListener(this::onClickSwitchActivity);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onClickSwitchActivity() {
+    public void onClickSwitchActivity(View view) {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }

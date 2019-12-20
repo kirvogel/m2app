@@ -38,6 +38,12 @@ import androidx.test.platform.app.InstrumentationRegistry;
 //@RunWith(RobolectricTestRunner.class)
 @RunWith(PowerMockRunner.class)
 public class ExampleUnitTest {
+
+    /*@Rule
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    @Rule
+    public ActivityTestRule<MapActivity> ruleMap = new ActivityTestRule<>(MapActivity.class);*/
+
     @Test
     //@Config(sdk = Build.VERSION_CODES.O_MR1)
     public void addition_isCorrect() {
@@ -52,13 +58,13 @@ public class ExampleUnitTest {
         assertEquals(1, myres.getFirst());
         assertEquals(2, myres.getSecond());
     }
-    //@Test
+    /*@Test
     //@Config(sdk = Build.VERSION_CODES.O_MR1)
-    //public void useAppContext() {
+    public void useAppContext() {
         // Context of the app under test.
-      //  Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-     //   assertEquals("com.example.m2app", appContext.getPackageName());
-    //}
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        assertEquals("com.example.m2app", appContext.getPackageName());
+    }*/
     @Test
    // @Config(sdk = Build.VERSION_CODES.O_MR1)
     public void mobileProvidersCodeTest() {

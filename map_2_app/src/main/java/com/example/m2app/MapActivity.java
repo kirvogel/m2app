@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;

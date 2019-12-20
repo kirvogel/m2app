@@ -47,6 +47,7 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4-rule-agent:2.0.4'
     testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.4'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.4'
+    testImplementation ("com.android.support.test.espresso:espresso-intents:3.2.0")
 }
 
 sonarqube {
