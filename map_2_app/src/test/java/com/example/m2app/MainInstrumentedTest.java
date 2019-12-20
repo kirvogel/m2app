@@ -11,9 +11,12 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -32,5 +35,7 @@ public class MainInstrumentedTest {
     public void shouldChangeTabAfterMenuClick() {
         onView(withId(R.id.buttonMap)).perform(click());
         intended(hasComponent(MapActivity.class.getName()));
+        onView(withId(R.id.fab)).perform(click());
+        onView(withText("Если что-то не работает, напишите на почту n.shashok@g.nsu.ru")).check(matches(isDisplayed()));
     }
 }

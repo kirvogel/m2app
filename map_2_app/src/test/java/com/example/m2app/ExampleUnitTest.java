@@ -43,27 +43,19 @@ import androidx.test.platform.app.InstrumentationRegistry;
 @RunWith(PowerMockRunner.class)
 public class ExampleUnitTest {
 
-    /*@Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
-    @Rule
-    public ActivityTestRule<MapActivity> ruleMap = new ActivityTestRule<>(MapActivity.class);*/
-
     @Test
-    //@Config(sdk = Build.VERSION_CODES.O_MR1)
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
 
 
     @Test
-    //@Config(sdk = Build.VERSION_CODES.O_MR1)
     public void testMyResultClass() {
         MyResult myres = new MyResult(1, 2);
         assertEquals(1, myres.getFirst());
         assertEquals(2, myres.getSecond());
     }
     @Test
-   // @Config(sdk = Build.VERSION_CODES.O_MR1)
     public void mobileProvidersCodeTestException() {
         assertEquals(0, Requests.getMNCList(2500000).length);
     }
@@ -73,13 +65,11 @@ public class ExampleUnitTest {
     }
 
     @Test
-    // @Config(sdk = Build.VERSION_CODES.O_MR1)
     public void mobileCountryCodeTest() {
         assertEquals(250, (int)Requests.getMCC("ru"));
     }
 
     @Test
-    // @Config(sdk = Build.VERSION_CODES.O_MR1)
     public void mobileCountryCodeTestException() {
         assertEquals(0, (int)Requests.getMCC(null));
         assertEquals(0, (int)Requests.getMCC("ruu"));
