@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,8 +58,7 @@ public class MobileCountryCodeMobileNetworkCode {
         }
     }
 
-    @SuppressLint("Assert")
-    private static String getCoutryName(double latitude, double longtitude) throws IOException {
+    public static String getCountryCode(double latitude, double longtitude) throws IOException {
         URL url = new URL("https://us1.unwiredlabs.com/v2/reverse.php?token="
                 + "a65aee3fdcc744"
                 + "&lat=" + latitude
@@ -71,13 +71,22 @@ public class MobileCountryCodeMobileNetworkCode {
             while ((inputLine = bufferedReader.readLine()) != null) {
                 response.append(inputLine);
             }
-            assert false;
-            JSONObject json = new JSONObject(response.toString());
-            return (String)((JSONObject)json.get("address")).get("country_code");
-        } catch (IOException | JSONException e) {
+            return response.toString();
+        } catch (IOException e) {
             Timber.tag("M2APP").v(e);
         } finally {
             urlConnection.disconnect();
+        }
+        return "";
+    }
+
+    @SuppressLint("Assert")
+    public static String getCoutryName(double latitude, double longtitude) {
+        try  {
+            JSONObject json = new JSONObject(getCountryCode(latitude, longtitude));
+            return (String)((JSONObject)json.get("address")).get("country_code");
+        } catch (IOException | JSONException e) {
+            Timber.tag("M2APP").v(e);
         }
         return "";
     }
@@ -144,8 +153,7 @@ public class MobileCountryCodeMobileNetworkCode {
     private static MyResult getCellId() {
         int cellId = 0;
         int lac = 0;
-        final TelephonyManager telephony =
-                (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        final TelephonyManager telephony = getManager();
         assert telephony != null;
         if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
             @SuppressLint("MissingPermission") final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
@@ -155,5 +163,10 @@ public class MobileCountryCodeMobileNetworkCode {
             }
         }
         return new MyResult(cellId, lac);
+    }
+
+    private static TelephonyManager getManager() {
+        return
+                (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
     }
 }

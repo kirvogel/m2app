@@ -40,9 +40,9 @@ dependencies {
 sonarqube {
     properties {
         property "sonar.exclusions", "**/*Generated.java"
-        property "sonar.junit.reportsPath", "build/test-results/testReleaseUnitTest"
+        property "sonar.junit.reportsPath", "reports/jacoco/jacocoTestReport"
         property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.jacoco.reportPath", "build/jacoco/testReleaseUnitTest.exec"
+        property "sonar.jacoco.reportPath", "build/jacoco/testDebugUnitTest.exec"
     }
 }
 
@@ -84,7 +84,7 @@ android {
 def coverageSourceDirs = [
         '../app/src/main/java'
 ]
-task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedAndroidTest']) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"

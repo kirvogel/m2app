@@ -5,8 +5,11 @@ import com.example.data.MyResult;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 //import androidx.test.platform.app.InstrumentationRegistry;
 //
@@ -41,7 +44,20 @@ public class ExampleUnitTest {
     }*/
     @Test
    // @Config(sdk = Build.VERSION_CODES.O_MR1)
-    public void mobileCoutryCodeTest() {
+    public void mobileProvidersCodeTest() {
         assertNotEquals(0, MobileCountryCodeMobileNetworkCode.getMNCList(250).length);
+    }
+
+    @Test
+    // @Config(sdk = Build.VERSION_CODES.O_MR1)
+    public void mobileCountryCodeTest() {
+        assertEquals(250, (int)MobileCountryCodeMobileNetworkCode.getMCC("ru"));
+    }
+    @Test
+    public void MobileCountryNameTest() throws IOException {
+        String code = MobileCountryCodeMobileNetworkCode.getCountryCode(55.751244, 37.618423);
+        assertTrue(code
+                .startsWith("{\"status\":\"ok\""));
+        assertTrue(code.endsWith("}}"));
     }
 }
