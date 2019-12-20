@@ -2,8 +2,6 @@ package com.example.data;
 
 import android.annotation.SuppressLint;
 
-import com.google.gson.stream.JsonWriter;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +45,7 @@ public class MobileCountryCodeMobileNetworkCode {
                 if (json.get("status").equals("ok")) {
                     obj.add(json);
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Timber.tag("M2APP").v(e);
             }
         }

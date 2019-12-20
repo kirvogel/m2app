@@ -157,7 +157,7 @@ public class ExampleUnitTest {
         when(Requests.getCountryCode(any(Double.class), any(Double.class))).thenReturn("ru");
         when(Requests.getMCC("ru")).thenReturn(250);
         when(Requests.getMNCList(any(Integer.class))).thenReturn(new int[]{1,2,3});
-        when(Requests.getStations(any(Integer.class), any(Integer.class), any(String.class))).thenReturn(new String[]{});
+        when(Requests.getStations(any(Integer.class), any(Integer.class), any(String.class))).thenReturn(new String[]{",", "."});
 
         when(JSONCreator.createJSONObject(any(String.class))).thenReturn(obj1);
         when(JSONCreator.createArray(any(Integer.class))).thenReturn(array);
