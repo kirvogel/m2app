@@ -4,11 +4,14 @@ import com.example.data.MobileCountryCodeMobileNetworkCode;
 import com.example.data.MyResult;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 //import androidx.test.platform.app.InstrumentationRegistry;
@@ -20,6 +23,7 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 //@RunWith(RobolectricTestRunner.class)
+    @RunWith(JUnit4.class)
 public class ExampleUnitTest {
     @Test
     //@Config(sdk = Build.VERSION_CODES.O_MR1)
@@ -59,5 +63,13 @@ public class ExampleUnitTest {
         assertTrue(code
                 .startsWith("{\"status\":\"ok\""));
         assertTrue(code.endsWith("}}"));
+    }
+
+    @Test
+    public void StationsTest() throws IOException {
+        String[] getStations = MobileCountryCodeMobileNetworkCode.getStations(
+                55.751244, 37.618423,
+                2224, 16, "ru");
+        assertNotNull(getStations);
     }
 }

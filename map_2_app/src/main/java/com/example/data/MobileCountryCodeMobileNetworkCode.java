@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -91,16 +92,10 @@ public class MobileCountryCodeMobileNetworkCode {
         return "";
     }
 
-    @SuppressLint("Assert")
-    public static JSONObject[] getStations(double latitude, double longtitude) throws IOException {
-        String country = getCoutryName(latitude, longtitude);
+    public static String[] getStations(double latitude, double longtitude, int cellId, int lac, String country) throws IOException {
         Integer code = getMCC(country);
         int[] mncList = getMNCList(code);
-        MyResult res = getCellId();
-        int cellId = res.getFirst();
-        int lac = res.getSecond();
-
-        List<JSONObject> obj = new LinkedList<>();
+        List<String> resList = new LinkedList<>();
 
         for (int mnc :
                 mncList) {
@@ -110,7 +105,7 @@ public class MobileCountryCodeMobileNetworkCode {
             connection.setRequestMethod("POST");
             connection.setReadTimeout(10000);
             try (Writer writer = new OutputStreamWriter(connection.getOutputStream());
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String query = "{\n" +
                         "    \"token\": \"a65aee3fdcc744\"," +
                         "    \"radio\": \"gsm\"," +
@@ -132,15 +127,37 @@ public class MobileCountryCodeMobileNetworkCode {
                 while ((inputLine = bufferedReader.readLine()) != null) {
                     response.append(inputLine);
                 }
-                assert false;
-                JSONObject json = new JSONObject(response.toString());
-                if (json.get("status").equals("ok")) {
-                    obj.add(json);
-                }
-            } catch (IOException | JSONException e) {
+                resList.add(response.toString());
+            } catch (IOException e) {
                 Timber.tag("M2APP").v(e);
             } finally {
                 connection.disconnect();
+            }
+        }
+        String[] objects = new String[resList.size()];
+        for (int i = 0; i < resList.size(); ++i) {
+            objects[i] = resList.get(i);
+        }
+        return objects;
+    }
+
+    @SuppressLint("Assert")
+    public static JSONObject[] getStations(double latitude, double longtitude) throws IOException {
+
+        MyResult res = getCellId();
+        String[] stations = getStations(latitude, longtitude, res.getFirst(),res.getSecond(), getCoutryName(latitude, longtitude));
+        List<JSONObject> obj = new LinkedList<>();
+
+        for (String mnc :
+                stations) {
+            try  {
+
+                JSONObject json = new JSONObject(mnc);
+                if (json.get("status").equals("ok")) {
+                    obj.add(json);
+                }
+            } catch (JSONException e) {
+                Timber.tag("M2APP").v(e);
             }
         }
         JSONObject[] objects = new JSONObject[obj.size()];

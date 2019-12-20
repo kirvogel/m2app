@@ -30,19 +30,22 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.0-beta.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.11.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation  'androidx.test.ext:junit:1.1.1'
+    testImplementation  'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation  'androidx.test:rules:1.3.0-alpha03'
+    testImplementation 'androidx.test:core:1.2.0'
+    // Optional -- Mockito framework
+    testImplementation 'org.mockito:mockito-core:1.10.19'
     testImplementation 'org.robolectric:robolectric:4.3.1'
-    testImplementation 'com.jayway.android.robotium:robotium:5.6.3'
 }
 
 sonarqube {
     properties {
         property "sonar.exclusions", "**/*Generated.java"
-        property "sonar.junit.reportsPath", "reports/jacoco/jacocoTestReport"
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.jacoco.reportPath", "build/jacoco/testDebugUnitTest.exec"
+        property "sonar.jacoco.reportsPath", "build/jacoco/testDebugUnitTest.exec"
     }
 }
 
@@ -84,7 +87,7 @@ android {
 def coverageSourceDirs = [
         '../app/src/main/java'
 ]
-task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedAndroidTest']) {
+task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest']) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"
@@ -107,8 +110,7 @@ task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest', 'conne
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
+            "jacoco/testDebugUnitTest.exec"
     ])
 
     reports {
