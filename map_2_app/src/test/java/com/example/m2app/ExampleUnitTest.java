@@ -13,11 +13,8 @@ import com.mapbox.mapboxsdk.Mapbox;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.runner.Request;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.Any;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -74,6 +71,10 @@ public class ExampleUnitTest {
     }*/
     @Test
    // @Config(sdk = Build.VERSION_CODES.O_MR1)
+    public void mobileProvidersCodeTestException() {
+        assertEquals(0, Requests.getMNCList(2500000).length);
+    }
+
     public void mobileProvidersCodeTest() {
         assertNotEquals(0, Requests.getMNCList(250).length);
     }
@@ -83,12 +84,25 @@ public class ExampleUnitTest {
     public void mobileCountryCodeTest() {
         assertEquals(250, (int)Requests.getMCC("ru"));
     }
+
+    @Test
+    // @Config(sdk = Build.VERSION_CODES.O_MR1)
+    public void mobileCountryCodeTestException() {
+        assertEquals(0, (int)Requests.getMCC(null));
+        assertEquals(0, (int)Requests.getMCC("ruu"));
+    }
     @Test
     public void MobileCountryNameTest() throws IOException {
         String code = Requests.getCountryCode(55.751244, 37.618423);
         assertTrue(code
                 .startsWith("{\"status\":\"ok\""));
         assertTrue(code.endsWith("}}"));
+    }
+
+    @Test
+    public void MobileCountryNameTestError() throws IOException {
+        String code = Requests.getCountryCode(-1, -1);
+        assertEquals("{\"status\":\"error\",\"message\":\"NO_MATCHES\"}", code);
     }
 
     @Test

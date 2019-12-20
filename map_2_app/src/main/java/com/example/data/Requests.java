@@ -39,20 +39,17 @@ public class Requests {
     }
 
     public static int[] getMNCList(int mcc) {
-        try {
-            return map.get(mcc);
-        } catch (Exception e) {
-            return new int[]{};
-        }
+        int[] res = map.get(mcc);
+        if (res == null) return new int[]{};
+        return res;
+
     }
 
     public static Integer getMCC(String name) {
         if (name == null) return 0;
-        try {
-            return mapNames.get(name);
-        } catch (NullPointerException e) {
-            return 0;
-        }
+        Integer res = mapNames.get(name);
+        if (res == null) return 0;
+        return res;
     }
 
     public static String getCountryCode(double latitude, double longtitude) throws IOException {
