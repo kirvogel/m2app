@@ -34,21 +34,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
     testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'com.jayway.android.robotium:robotium:5.6.3'
 }
 
 sonarqube {
     properties {
         property "sonar.exclusions", "**/*Generated.java"
+        property "sonar.junit.reportsPath", "build/test-results/testReleaseUnitTest"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPath", "build/jacoco/testReleaseUnitTest.exec"
     }
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.example.m2app"
-        minSdkVersion 23
-        targetSdkVersion 29
+        minSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -66,39 +70,50 @@ android {
             includeAndroidResources = true
         }
     }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
 
     jacoco {
         version "0.8.5"
     }
 }
 
-/*
+
 def coverageSourceDirs = [
         '../app/src/main/java'
 ]
-task jacocoTestReport(type:JacocoReport, dependsOn: "testDebugUnitTest") {
+task jacocoTestReport(type:JacocoReport, dependsOn: ['testDebugUnitTest']) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"
 
-    classDirectories = fileTree(
-            dir: '../app/build/intermediates/classes/debug',
-            excludes: ['**//*R.class',
-'**//*R$*.class',
-'**//**$ViewInjector*.*',
-'**//*BuildConfig.*',
-'**//*Manifest*.*']
-)
+    def fileFilter = ['**/R.class',
+                      '**/R$*.class',
+                      '**/BuildConfig.*',
+                      '**/Manifest*.*',
+                      '**/*Test*.*',
+                      'android/**/*.*',
+                      '**/data/models/*']
 
-additionalSourceDirs = getExecutionData().from(coverageSourceDirs)
-sourceDirectories = getExecutionData().from(coverageSourceDirs)
-executionData = getExecutionData().from('../app/build/jacoco/testDebug.exec')
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
 
-reports {
-    xml.enabled = true
-    html.enabled = true
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
 }
-
-}
-
-*/
