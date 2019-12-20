@@ -60,10 +60,9 @@ public class MapActivity extends AppCompatActivity implements
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         findViewById(R.id.button).setOnClickListener(view -> {
-            Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
-            if (PermissionsManager.areLocationPermissionsGranted(this) && lastKnownLocation != null) {
+            if (PermissionsManager.areLocationPermissionsGranted(this) && mapboxMap.getLocationComponent().getLastKnownLocation() != null) {
                 mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
-                        new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
+                        new LatLng(mapboxMap.getLocationComponent().getLastKnownLocation().getLatitude(), mapboxMap.getLocationComponent().getLastKnownLocation().getLongitude())));
             }
         });
     }

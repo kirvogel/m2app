@@ -2,7 +2,6 @@ package com.example.data;
 
 import android.annotation.SuppressLint;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
