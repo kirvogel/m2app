@@ -3,7 +3,6 @@ package com.example.m2app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        fab.setOnClickListener(view -> Snackbar.make(view, "Напишите на n.shashok@g.nsu.ru, если что-то не работает", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
         FloatingActionButton fab2 = findViewById(R.id.buttonMap);
         fab2.setOnClickListener(this::onClickSwitchActivity);
@@ -38,20 +37,5 @@ public class MainActivity extends AppCompatActivity {
     public void onClickSwitchActivity(View view) {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
