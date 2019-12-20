@@ -25,12 +25,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
         FloatingActionButton fab2 = findViewById(R.id.button);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickSwitchActivity();
-            }
-        });
+        fab2.setOnClickListener(view -> onClickSwitchActivity());
     }
 
     @Override
