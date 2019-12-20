@@ -93,38 +93,36 @@ android {
 }
 
 
-//def coverageSourceDirs = [
- //       '../app/src/main/java'
-//]
-//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-//    group = "Reporting"
-//
-//    description = "Generate Jacoco coverage reports"
-//
- //   def fileFilter = ['**/R.class',
-  //                    '**/R$*.class',
-   //                   '**/BuildConfig.*',
-//                      '**/Manifest*.*',
- //                     '**/*Test*.*',
-  //                    'android/**/*.*',
- //                     '**/data/models/*']
-//
-  //  def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+def coverageSourceDirs = [
+       '../app/src/main/java'
+]
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+    group = "Reporting"
 
-   // additionalSourceDirs = files(coverageSourceDirs)
-   // sourceDirectories = files(coverageSourceDirs)
+    description = "Generate Jacoco coverage reports"
 
-    //def mainSrc = "${project.projectDir}/src/main/java"
+   def fileFilter = ['**/R.class',
+                    '**/R$*.class',
+                   '**/BuildConfig.*',
+                     '**/Manifest*.*',
+                     '**/*Test*.*',
+                    'android/**/*.*',
+                     '**/data/models/*']
 
-   // sourceDirectories = files([mainSrc])
-   // classDirectories = files([debugTree])
-   // executionData = fileTree(dir: "$buildDir", includes: [
-    //        "jacoco/testDebugUnitTest.exec"
-   // ])
+  def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+ additionalSourceDirs = files(coverageSourceDirs)
+ sourceDirectories = files(coverageSourceDirs)
 
-  //  reports {
-   //     xml.enabled = true
-   //     html.enabled = true
-   // }
+def mainSrc = "${project.projectDir}/src/main/java"
 
-//}
+ sourceDirectories = files([mainSrc])
+ classDirectories = files([debugTree])
+ executionData = fileTree(dir: "$buildDir", includes: [
+        "jacoco/testDebugUnitTest.exec"
+ ])
+
+  reports {
+     xml.enabled = true
+     html.enabled = true
+ }
+}
