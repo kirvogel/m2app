@@ -4,7 +4,6 @@
     <string name="mapbox_access_token">pk.eyJ1Ijoia2lyaWFuZmVycmV0dCIsImEiOiJjazQ5aGx4ZzUwNTRkM2VuMnYxcGpkcGp3In0.ZN5SNHuGYaV6Qu5p9afKtg</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="close">Close</string>
-    <string name="title_activity_mapp">MappActivity</string>
     <string name="user_location_permission_explanation">This app needs location permissions in order to show its functionality.</string>
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
     <string name="open_cell_id_token">a65aee3fdcc744</string>

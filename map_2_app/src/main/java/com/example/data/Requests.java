@@ -89,7 +89,7 @@ public class Requests {
             try (Writer writer = new OutputStreamWriter(connection.getOutputStream());
                  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String query = "{\n" +
-                        "    \"token\": \"a65aee3fdcc744\"," +
+                        "    \"token\": \"93f48bbaa5870a\"," +
                         "    \"radio\": \"gsm\"," +
                         "    \"mcc\": " + code + "," +
                         "    \"mnc\": " + mnc + "," +

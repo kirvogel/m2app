@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,23 +47,19 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        // Mapbox access token is configured here. This needs to be called either in your application
-        // object or in the same activity which contains the mapview.
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-
-        // This contains the MapView in XML and needs to be called after the access token is configured.
         setContentView(R.layout.activity_map);
 
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        findViewById(R.id.button).setOnClickListener(view -> {
-            if (PermissionsManager.areLocationPermissionsGranted(this) && mapboxMap.getLocationComponent().getLastKnownLocation() != null) {
-                mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
-                        new LatLng(mapboxMap.getLocationComponent().getLastKnownLocation().getLatitude(), mapboxMap.getLocationComponent().getLastKnownLocation().getLongitude())));
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (PermissionsManager.areLocationPermissionsGranted(MapActivity.this) && mapboxMap.getLocationComponent().getLastKnownLocation() != null) {
+                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(mapboxMap.getLocationComponent().getLastKnownLocation().getLatitude(), mapboxMap.getLocationComponent().getLastKnownLocation().getLongitude())));
+                }
             }
         });
     }
@@ -114,24 +111,20 @@ public class MapActivity extends AppCompatActivity implements
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         MapActivity.this.mapboxMap = mapboxMap;
         mapboxMap.setStyle(Style.MAPBOX_STREETS,
-                this::enableLocationComponent);
+                new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style loadedMapStyle) {
+                        MapActivity.this.enableLocationComponent(loadedMapStyle);
+                    }
+                });
     }
 
     private void setLocationComponent(@NonNull Style loadedMapStyle) {
-        // Get an instance of the component
         LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-// Activate with options
         locationComponent.activateLocationComponent(
                 LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
-
-// Enable to make component visible
         locationComponent.setLocationComponentEnabled(true);
-
-// Set the component's camera mode
         locationComponent.setCameraMode(CameraMode.TRACKING_GPS);
-
-// Set the component's render mode
         locationComponent.setRenderMode(RenderMode.GPS);
     }
 
@@ -194,7 +187,12 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onPermissionResult(boolean granted) {
         if (granted) {
-            mapboxMap.getStyle(this::enableLocationComponent);
+            mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    enableLocationComponent(style);
+                }
+            });
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();
             finish();
