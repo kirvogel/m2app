@@ -61,14 +61,11 @@ public class MapActivity extends AppCompatActivity implements
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         final MapActivity that = this;
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
-                if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
-                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
-                            new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
-                }
+        findViewById(R.id.button).setOnClickListener(view -> {
+            Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
+            if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
+                mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
         });
     }
@@ -111,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
@@ -120,12 +117,7 @@ public class MapActivity extends AppCompatActivity implements
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         MapActivity.this.mapboxMap = mapboxMap;
         mapboxMap.setStyle(Style.MAPBOX_STREETS,
-                new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        enableLocationComponent(style);
-                    }
-                });
+                this::enableLocationComponent);
     }
 
     private void setLocationComponent(@NonNull Style loadedMapStyle) {
@@ -205,12 +197,7 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onPermissionResult(boolean granted) {
         if (granted) {
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
-                }
-            });
+            mapboxMap.getStyle(style -> enableLocationComponent(style));
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();
             finish();
