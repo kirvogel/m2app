@@ -60,10 +60,9 @@ public class MapActivity extends AppCompatActivity implements
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        final MapActivity that = this;
         findViewById(R.id.button).setOnClickListener(view -> {
             Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
-            if (PermissionsManager.areLocationPermissionsGranted(that) && lastKnownLocation != null) {
+            if (PermissionsManager.areLocationPermissionsGranted(this) && lastKnownLocation != null) {
                 mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(
                         new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
             }
@@ -197,7 +196,7 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onPermissionResult(boolean granted) {
         if (granted) {
-            mapboxMap.getStyle(style -> enableLocationComponent(style));
+            mapboxMap.getStyle(this::enableLocationComponent);
         } else {
             Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show();
             finish();
