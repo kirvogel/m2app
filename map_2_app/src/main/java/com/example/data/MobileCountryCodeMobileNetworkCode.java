@@ -1,8 +1,6 @@
 package com.example.data;
 
 import android.annotation.SuppressLint;
-import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
