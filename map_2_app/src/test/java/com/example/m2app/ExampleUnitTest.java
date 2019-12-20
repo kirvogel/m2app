@@ -1,35 +1,29 @@
 package com.example.m2app;
 
-import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.test.mock.MockContext;
-
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.data.MyResult;
 import com.example.data.Requests;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import org.junit.Test;
-import org.junit.runner.Request;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.MockitoAnnotations;
-import org.mockito.MockitoSession;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /*
 import androidx.test.platform.app.InstrumentationRegistry;
