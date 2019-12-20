@@ -40,7 +40,7 @@ public class MobileCountryCodeMobileNetworkCode {
 
     }
 
-    private static int[] getMNCList(int mcc) {
+    public static int[] getMNCList(int mcc) {
         try {
             return map.get(mcc);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class MobileCountryCodeMobileNetworkCode {
         }
     }
 
-    private static Integer getMCC(String name) {
+    public static Integer getMCC(String name) {
         if (name == null) return 0;
         try {
             return mapNames.get(name);
