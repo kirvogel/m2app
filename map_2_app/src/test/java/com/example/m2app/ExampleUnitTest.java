@@ -162,6 +162,8 @@ public class ExampleUnitTest {
         when(JSONCreator.createJSONObject(any(String.class))).thenReturn(obj1);
         when(JSONCreator.createArray(any(Integer.class))).thenReturn(array);
 
+        when(obj1.get("status")).thenReturn("ok");
+
         assertEquals(2, MobileCountryCodeMobileNetworkCode.getStations(0, 0).length);
         assertEquals("", MobileCountryCodeMobileNetworkCode.getCoutryName(0 , 0));
     }
