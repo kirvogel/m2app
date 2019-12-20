@@ -54,7 +54,7 @@ public class Requests {
 
     public static String getCountryCode(double latitude, double longtitude) throws IOException {
         URL url = new URL("https://us1.unwiredlabs.com/v2/reverse.php?token="
-                + "a65aee3fdcc744"
+                + "21f162e748cdff"
                 + "&lat=" + latitude
                 + "&lon=" + longtitude);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -88,20 +88,20 @@ public class Requests {
             connection.setReadTimeout(10000);
             try (Writer writer = new OutputStreamWriter(connection.getOutputStream());
                  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String query = "{\n" +
-                        "    \"token\": \"93f48bbaa5870a\"," +
-                        "    \"radio\": \"gsm\"," +
-                        "    \"mcc\": " + code + "," +
-                        "    \"mnc\": " + mnc + "," +
-                        "    \"cells\": [{" +
-                        "        \"cid\": " + cellId + "," +
+                String query = "{" +
+                        "\"token\": \"21f162e748cdff\"," +
+                        "\"radio\": \"gsm\"," +
+                        "\"mcc\": " + code + "," +
+                        "\"mnc\": " + mnc + "," +
+                        "\"cells\": [{" +
+                        "\"cid\": " + cellId + "," +
                         "\"lac\":" + lac +
-                        "    }]," +
-                        "    \"address\": 0" +
+                        "}]," +
+                        "\"address\": 0" +
                         "}";
 
                 writer.write(query);
-                writer.flush();
+                //writer.flush();
 
                 String inputLine;
                 StringBuilder response = new StringBuilder();
