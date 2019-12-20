@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JSONCreator {
+    private JSONCreator(){}
     public static JSONObject createJSONObject(String input) throws JSONException {
         return new JSONObject(input);
     }
