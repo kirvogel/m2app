@@ -86,25 +86,31 @@ public class Requests {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setReadTimeout(10000);
-            try (Writer writer = new OutputStreamWriter(connection.getOutputStream());
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String query = "{" +
-                        "\"token\": \"21f162e748cdff\"," +
-                        "\"radio\": \"gsm\"," +
-                        "\"mcc\": " + code + "," +
-                        "\"mnc\": " + mnc + "," +
-                        "\"cells\": [{" +
-                        "\"cid\": " + cellId + "," +
-                        "\"lac\":" + lac +
-                        "}]," +
-                        "\"address\": 0" +
+            Writer writer = null;
+            BufferedReader bufferedReader = null;
+            try {
+                String query;
+                query = "{\n" +
+                        "    \"token\": \"21f162e748cdff\",\n" +
+                        "    \"radio\": \"gsm\",\n" +
+                        "    \"mcc\": " + code + ",\n" +
+                        "    \"mnc\": "+ mnc + ",\n" +
+                        "    \"cells\": [{\n" +
+                        "    \"cid\": " + cellId + "," +
+                        "     \"lac\":" + lac +
+                        "    }],\n" +
+                        "    \"address\": 0\n" +
                         "}";
 
+                writer = new OutputStreamWriter(connection.getOutputStream());
+
                 writer.write(query);
-                //writer.flush();
+                writer.flush();
 
                 String inputLine;
                 StringBuilder response = new StringBuilder();
+
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 while ((inputLine = bufferedReader.readLine()) != null) {
                     response.append(inputLine);
@@ -114,6 +120,12 @@ public class Requests {
                 Timber.tag("M2APP").v(e);
             } finally {
                 connection.disconnect();
+                if (writer != null) {
+                    writer.close();
+                }
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
             }
         }
         String[] objects = new String[resList.size()];
